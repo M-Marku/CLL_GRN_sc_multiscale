@@ -1,0 +1,263 @@
+Node IL3 {
+    logic = 1;
+    rate_up   = 0;
+    rate_down = 0;
+}
+
+// Constitutively active RNA-binding protein — fixed ON
+Node HNRNPK {
+    logic = 1;
+    rate_up   = 0;
+    rate_down = 0;
+}
+
+// ── NEW: BTK — direct ibrutinib target ───────────────────────────────────────
+// Activated downstream of BCR (modelled here via receptor inputs).
+// Ibrutinib acts by locking this node OFF via mutate('BTK','OFF').
+// For PK coupling: rate_down = f(C(t)) set programmatically at runtime.
+Node BTK {
+    logic = IL3RA;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0 : 1;
+}
+
+// ── NEW: PLCG2_mutant — gain-of-function resistance allele ───────────────────
+// OFF at M0 and M3 (wild-type); switched ON at M27 to model acquired
+// PLCG2 gain-of-function mutation that bypasses BTK requirement.
+Node PLCG2_mutant {
+    logic = 0;
+    rate_up   = 0;
+    rate_down = 0;
+}
+
+// ── NEW: PLCG2 — phospholipase C gamma 2 ─────────────────────────────────────
+// Normally activated downstream of BTK.
+// When PLCG2_mutant = 1, becomes constitutively active independently of BTK.
+
+// ── NEW: SYK — spleen tyrosine kinase, upstream BCR signalosome kinase ───────
+// Activated by receptor ligation (BCR via IL3RA/EPOR/GHR as proxies for
+// antigen and cytokine receptor co-stimulation in the lymph node niche).
+// SYK is upstream of BTK in the BCR signalling cascade and is NOT inhibited
+// by ibrutinib — it represents a potential bypass route to PI3K activation.
+// SYK inhibitors (fostamatinib, cerdulatinib) are active in CLL.
+// Reference: Herman et al., Blood 2011; Hoellenriegel et al., Leukemia 2012.
+Node SYK {
+    logic = IL3RA;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0 : 1;
+}
+Node PLCG2 {
+    logic = (BTK | PLCG2_mutant);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// ── NEW: PTEN — tumour suppressor ────────────────────────────────────────────
+// Negatively regulates PI3K/AKT axis.
+// Downregulated at M27 via miRNA-mediated mechanism (lock OFF at M27).
+Node PTEN {
+    logic = !PI3K;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+// ── NEW: MTOR ────────────────────────────────────────────────────────────────
+// Activated downstream of PI3K/AKT; promotes CLL cell survival.
+// PTEN loss allows MTOR activation independently of upstream PI3K signals.
+Node MTOR {
+    logic = (AKT & !PTEN & (PLCG2 | PLCG2_mutant));
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// ── Phenotype output nodes ────────────────────────────────────────────────────
+
+Node Growth_Arrest {
+    logic = (CEBPA & !MYC);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+Node Apoptosis {
+    logic = (((BCL2L11_FASLG | MYC | JUN)) & !((BAG1 | BCL2 | BCL2L1 | MCL1))) | !BCL2L1;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+Node Proliferation {
+    logic = (MYC | JUN);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+// NEW output: composite ibrutinib resistance node
+// Active when any of the three major BTK-bypass mechanisms is engaged:
+//   (1) PLCG2 gain-of-function while BTK is inhibited
+//   (2) PTEN loss reactivating AKT independently of PI3K
+//   (3) MTOR-driven survival
+//   (4) Constitutive BCL2/MCL1 anti-apoptotic protection
+Node Resistance {
+    logic = (PLCG2 & !BTK) | MTOR | (BCL2L1 & NFKB1);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+// ── CEBPA / PCBP2 / ERK–MEK–RAF1–RAS cascade ─────────────────────────────────
+
+Node CEBPA {
+    logic = !PCBP2;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node PCBP2 {
+    logic = ERK;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node ERK {
+    logic = MEK;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node MEK {
+    logic = RAF1;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node RAF1 {
+    logic = RAS;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// UPDATED: BCR_ABL1 replaced by BTK as upstream BCR-pathway activator
+Node SOS1 {
+    logic = (BTK | IL3RA);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node IL3RA {
+    logic = IL3;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// UPDATED: added PTEN-loss bypass arm (!PTEN & MTOR)
+Node AKT {
+    logic = (PI3K | (!PTEN & MTOR));
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node BAD {
+    logic = !(AKT | RAS);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// Fast-activation TF: at least 2 of {HNRNPK, JAK2, SMAD, TCF} must be active
+Node MYC {
+    logic = ((NFKB1 & BTK) | (JAK2 & HNRNPK));
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node BAG1 {
+    logic = RAF1;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node BCL2L1 {
+    logic = (STAT5 & !BAD) | JUN | MTOR;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+Node NFKB1 {
+    logic = AKT;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node MCL1 {
+    logic = !GSK3B;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+// UPDATED: added PLCG2 as upstream activator of PI3K
+Node PI3K {
+    logic = (RAS | SYK | PLCG2);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node FOXO {
+    logic = !AKT;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node BCL2L11_FASLG {
+    logic = FOXO;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node RAS {
+    logic = SOS1;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// UPDATED: BCR_ABL1 replaced by BTK
+Node JAK2 {
+    logic = (BTK | IL3RA);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node STAT5 {
+    logic = (HCK | JAK2);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node BCL2 {
+    logic = (NFKB1 & !BAD);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 0.5;
+}
+
+// UPDATED: BCR_ABL1 replaced by BTK
+Node HCK {
+    logic = BTK;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node JUN {
+    logic = (RAS & !JUNB);
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+// UPDATED: BCR_ABL1 replaced by BTK
+Node JUNB {
+    logic = !BTK;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+
+Node GSK3B {
+    logic = !AKT;
+    rate_up   = @logic ? 1 : 0;
+    rate_down = @logic ? 0   : 1.0;
+}
+

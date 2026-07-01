@@ -1,0 +1,14 @@
+track,task,algo,n,pct
+gene,M27,GBM,7,70
+gene,M27,GLM,1,10
+gene,M27,StackedEnsemble,1,10
+gene,M27,XGBoost,1,10
+gene,M3,StackedEnsemble,6,60
+gene,M3,DeepLearning,2,20
+gene,M3,GBM,2,20
+tf,M27,DeepLearning,6,60
+tf,M27,GBM,3,30
+tf,M27,GLM,1,10
+tf,M3,DeepLearning,5,50
+tf,M3,GBM,4,40
+tf,M3,DRF,1,10
