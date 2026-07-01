@@ -11,7 +11,7 @@ colnames(AUCell_df) <- gsub("\\.\\.\\.", "", colnames(AUCell_df))
 cell_names <- rownames(AUCell_df)
 
 # Load the fate probabilities matrix
-fate_probs <- read.csv("Results/CLL_only/cell_matrix_fate_probabilities_light.csv", header = T, row.names = 1)
+fate_probs <- read.csv("Results/CLL_only/CellRank_results/cell_matrix_fate_probabilities_light.csv", header = T, row.names = 1)
 colnames(fate_probs) <- c("M3 lineage", "M27 lineage")
 
 common_cells <- intersect(rownames(AUCell_df), rownames(fate_probs))

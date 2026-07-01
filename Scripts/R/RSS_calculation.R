@@ -8,7 +8,7 @@ library(ggrepel)
 ### ------------------------------------------------------------
 ### Load the AUCell object and annotate the cells
 ### ------------------------------------------------------------
-AUCell_df <- read.csv("Results/CLL_only/AUcell_CLL_only.csv", header = T, row.names = 1, sep = "\t")
+AUCell_df <- read.csv("Results/CLL_only/pyScenic_results/AUcell_CLL_only.csv", header = T, row.names = 1, sep = "\t")
 
 colnames(AUCell_df) <- gsub("\\.\\.\\.", "", colnames(AUCell_df))
 
