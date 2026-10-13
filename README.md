@@ -1,13 +1,13 @@
 # A multiscale pharmacokinetic Boolean framework for ibrutinib resistance in a CLL patient case study
 
-**Malvina Marku, Cécile Pineau, Marcelo Hurtado, Hugo Chenel, Vera Pancaldi, Jean-Baptiste Woillard, Loïc Ysebaert, Étienne Chatelut, Melanie White-Koning**
+**Malvina Marku, Cécile Pineau, Marcelo Hurtado, Hugo Chenel, Jean-Baptiste Woillard, Loïc Ysebaert, Étienne Chatelut, Vera Pancaldi, Melanie White-Koning**
 
 
 ## Overview
 
 Code and model files for a case study that couples a patient-specific ibrutinib pharmacokinetic (PK) model with single-cell gene regulatory network (GRN) inference and a stochastic Boolean model of CLL signalling, using the longitudinal CITE-seq data of one patient (Cadot et al., 2020).
 
-Analyses: GRN inference (pySCENIC) · trajectory inference (CellRank) · PK-coupled Boolean model (MaBoSS) · PK–expression association.
+Analyses: GRN inference (pySCENIC) · trajectory inference (CellRank) · PK-coupled Boolean model (MaBoSS, Colomoto docker) · PK-expression association.
 
 ## Data and results
 
@@ -49,5 +49,5 @@ pySCENIC was run on the Genotoul cluster (https://bioinfo.genotoul.fr); the othe
 
 ## Citation
 
-Marku M, Pineau C, Hurtado M, Chenel H, Pancaldi V, Woillard J-B, Ysebaert L, Chatelut E, White-Koning M. ([year]). A multiscale pharmacokinetic Boolean framework for ibrutinib resistance in a CLL patient case study. *[Journal]*. doi: [to be added]
+Marku M, Pineau C, Hurtado M, Chenel H, Pancaldi V, Woillard J-B, Ysebaert L, Chatelut E, White-Koning M. ([year]). A multiscale pharmacokinetic Boolean framework for ibrutinib resistance in a CLL patient case study. *bioaXiv preprint*. doi: [to be added]
 
