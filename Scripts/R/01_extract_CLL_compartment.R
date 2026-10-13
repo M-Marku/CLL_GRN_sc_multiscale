@@ -4,8 +4,8 @@
 # and identifies per-timepoint marker genes.
 # =============================================================================
 
-source("config.R")
-source("functions.R")
+source("Scripts/config.R")
+source("Scripts/functions.R")
 
 library(Seurat)
 library(biomaRt)
