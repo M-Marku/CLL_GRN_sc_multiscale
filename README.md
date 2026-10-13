@@ -49,5 +49,5 @@ pySCENIC was run on the Genotoul cluster (https://bioinfo.genotoul.fr); the othe
 
 ## Citation
 
-Marku M, Pineau C, Hurtado M, Chenel H, Pancaldi V, Woillard J-B, Ysebaert L, Chatelut E, White-Koning M. ([year]). A multiscale pharmacokinetic Boolean framework for ibrutinib resistance in a CLL patient case study. *bioaXiv preprint*. doi: [to be added]
+Marku M, Pineau C, Hurtado M, Chenel H, Pancaldi V, Woillard J-B, Ysebaert L, Chatelut E, White-Koning M. ([year]). A multiscale pharmacokinetic Boolean framework for ibrutinib resistance in a CLL patient case study. *biorxiv preprint*. doi: [to be added]
 
