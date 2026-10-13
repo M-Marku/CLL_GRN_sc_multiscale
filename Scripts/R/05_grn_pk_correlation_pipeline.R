@@ -1,24 +1,7 @@
 ## ============================================================
 ## GRN-PK ibrutinib resistance study — full pipeline  (CORRECTED VERSION)
 ##
-## Changes vs. the original script:
-##  1. Trend classification made explicit. With three timepoints, Spearman rho
-##     can only be -1, -0.5, +0.5 or +1 (without ties), and cumulative AUC rises
-##     monotonically, so rho = +/-1 means "monotonic over time" and cannot be
-##     separated from time itself. Class labels are now descriptive
-##     (RHO_STRONG / RHO_WEAK / PK_LAB_* in the config), a diagnostic table of
-##     the distinct rho values is printed, and "PK-independent" (|rho| < 0.5)
-##     is recognised as impossible without ties.
-##  2. AutoML block: dR2 is a nested like-for-like comparison (baseline-only
-##     vs full model, same target, same held-out genes, same seed); test R2 is
-##     1 - SSE/SST; jitter is now seeded per replicate (before, the seed
-##     depended only on the sample size, so replicates shared the same noise);
-##     the unused add_noise() was removed.
-##  3. "AUC" renamed "AUC" (area under the concentration-time curve).
-##  Exposure is still one value per timepoint (identical for all genes), so
-##  the AutoML dR2 is expected to be ~0 by design: treat it as a null control.
 ## Approach: PK-gene expression Spearman correlation
-##   (Option 5: stratify genes by PK sensitivity trajectory)
 ##
 ## PK data: ID6_AUC_comparaison_methodes_final.xlsx
 ##   - day           : absolute time in days (1 row per day)

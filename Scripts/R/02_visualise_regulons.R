@@ -3,8 +3,8 @@
 # by timepoint and by individual regulon activity.
 # =============================================================================
 
-source("CLL_pipeline_R/config.R")
-source("CLL_pipeline_R/functions.R")
+source("Scripts/config.R")
+source("Scripts/functions.R")
 
 library(pheatmap)
 library(ggplot2)

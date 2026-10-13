@@ -4,8 +4,8 @@
 # pathway enrichment of the fate-associated regulons and their targets.
 # =============================================================================
 
-source("config.R")
-source("functions.R")
+source("Scripts/config.R")
+source("Scripts/functions.R")
 
 library(tidyverse)
 library(pheatmap)

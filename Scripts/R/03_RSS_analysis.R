@@ -4,8 +4,8 @@
 # enrichment of the M27-associated regulons.
 # =============================================================================
 
-source("config.R")
-source("functions.R")
+source("Scripts/config.R")
+source("Scripts/functions.R")
 
 library(dplyr)
 library(tidyverse)
